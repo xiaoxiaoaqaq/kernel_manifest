@@ -1,4 +1,4 @@
-name: KernelSU Next(VFS) OnePlus 12
+name: 自用 KernelSU Next(VFS) OnePlus 12
 on:
   workflow_dispatch:
     inputs:
