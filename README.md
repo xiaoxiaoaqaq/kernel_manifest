@@ -1,3 +1,3 @@
-# how to build
+# How to build?
 
 `chmod +x build.sh && ./build.sh`
