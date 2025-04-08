@@ -1,4 +1,4 @@
-name: 自用 KernelSU Next(VFS) OnePlus 12
+name: KernelSU Next(VFS) OnePlus 12
 on:
   workflow_dispatch:
     inputs:
@@ -66,15 +66,12 @@ jobs:
          sed -i '$i res=$(echo "$res" | sed '\''s/-dirty//g'\'')' kernel_platform/common/scripts/setlocalversion
          sed -i '$i res=$(echo "$res" | sed '\''s/-dirty//g'\'')' kernel_platform/msm-kernel/scripts/setlocalversion
          sed -i '$i res=$(echo "$res" | sed '\''s/-dirty//g'\'')' kernel_platform/external/dtc/scripts/setlocalversion
-         sed -i '$s|echo "\$res"|echo "$res-PKCZC"|' kernel_platform/common/scripts/setlocalversion            
-         sed -i '$s|echo "\$res"|echo "$res-PKCZC"|' kernel_platform/msm-kernel/scripts/setlocalversion
-         sed -i '$s|echo "\$res"|echo "$res-PKCZC"|' kernel_platform/external/dtc/scripts/setlocalversion
          
-      - name: Set up KernelSU Next
+      - name: Set up Sukisu
         run: |
          cd kernel_workspace/kernel_platform
-         curl -LSs "https://raw.githubusercontent.com/rifsxd/KernelSU-Next/next/kernel/setup.sh" | bash -s next
-         cd KernelSU-Next
+         curl -LSs "https://raw.githubusercontent.com/ShirkNeko/KernelSU/main/kernel/setup.sh" | bash -s susfs-dev
+         cd KernelSU
          KSU_VERSION=$(expr $(/usr/bin/git rev-list --count HEAD) "+" 10200)
          echo "KSUVER=$KSU_VERSION" >> $GITHUB_ENV
          sed -i "s/DKSU_VERSION=11998/DKSU_VERSION=${KSU_VERSION}/" kernel/Makefile
@@ -86,7 +83,7 @@ jobs:
            git clone https://github.com/Xiaomichael/kernel_patches.git
            cd kernel_platform
            cp ../susfs4ksu/kernel_patches/50_add_susfs_in_gki-${{ github.event.inputs.ANDROID_VERSION }}-${{ github.event.inputs.KERNEL_VERSION }}.patch ./common/
-           cp ../kernel_patches/next/0001-kernel-patch-susfs-v1.5.5-to-KernelSU-Next-v1.0.5.patch ./KernelSU-Next/
+           cp ../kernel_patches/next/0001-kernel-patch-susfs-v1.5.5-to-KernelSU-v1.0.5.patch ./KernelSU/
            cp ../kernel_patches/next/syscall_hooks.patch ./common/
            cp ../kernel_patches/lz4/001-lz4.patch ./common/
            cp ../kernel_patches/lz4/002-zstd.patch ./common/
@@ -94,8 +91,7 @@ jobs:
            cp ../susfs4ksu/kernel_patches/include/linux/* ./common/include/linux/
 
            # Apply patches
-           cd ./KernelSU-Next
-           patch -p1 < 0001-kernel-patch-susfs-v1.5.5-to-KernelSU-Next-v1.0.5.patch || true
+           cd ./KernelSU
            cd ../common
            patch -p1 < 001-lz4.patch || true
            patch -p1 < 002-zstd.patch || true
@@ -141,5 +137,5 @@ jobs:
       - name: Upload AnyKernel3
         uses: actions/upload-artifact@v4
         with:
-         name: AnyKernel3_KernelSU_Next_lz4_zstd_${{ env.KSUVER }}_${{ github.event.inputs.FEIL }}
+         name: AnyKernel3_Sukisu_lz4_zstd_${{ env.KSUVER }}_${{ github.event.inputs.FEIL }}
          path: ./AnyKernel3/*
