@@ -72,9 +72,9 @@ jobs:
          cd kernel_workspace/kernel_platform
          curl -LSs "https://raw.githubusercontent.com/ShirkNeko/KernelSU/main/kernel/setup.sh" | bash -s susfs-dev
          cd KernelSU
-         KSU_VERSION=$(expr $(/usr/bin/git rev-list --count HEAD) "+" 10200)
+         KSU_VERSION=$(expr $(/usr/bin/git rev-list --count HEAD) "+" 10606)
          echo "KSUVER=$KSU_VERSION" >> $GITHUB_ENV
-         sed -i "s/DKSU_VERSION=11998/DKSU_VERSION=${KSU_VERSION}/" kernel/Makefile
+         sed -i "s/DKSU_VERSION=12800/DKSU_VERSION=${KSU_VERSION}/" kernel/Makefile
         
       - name: Set up susfs
         run: |
@@ -86,7 +86,6 @@ jobs:
            cp ../kernel_patches/next/syscall_hooks.patch ./common/
            cp ../kernel_patches/lz4/001-lz4.patch ./common/
            cp ../kernel_patches/lz4/002-zstd.patch ./common/
-           cp ../kernel_patches/lz4/003-lz4kd.patch ./common/
            cp ../susfs4ksu/kernel_patches/fs/* ./common/fs/
            cp ../susfs4ksu/kernel_patches/include/linux/* ./common/include/linux/
 
